@@ -72,32 +72,94 @@ function insertHtmlIntoElement(html, id){
 
 /////////////////////////////////////////////// For processing the submitted input file  ///////////////////////////////////////////////
 
-function processFile(file){
+document.getElementById('myFile').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    fileContent = e.target.result;
+  };
+
+  reader.onerror = function(e) {
+    console.error("Error reading file:", e);
+  };
+
+  reader.readAsText(file); // Reads the file as plain text
+});
+
+
+function processFile(id, fileContent){
     // All the processing steps combined
+    console.log(fileContent);
+    try{
+        const file = grabFileFromElement(id);
+        const fileName = extractFileName(file);
+        console.log(fileContent)
+        // const jsonString = convertTextToJSON(fileName, fileContent);
+        // console.log(jsonString)
+        // sendJsonToAPI(jsonString);
+    }catch{
+        console.log("oops, error!")
+    }
+}
+
+// Grab the uploaded file
+function grabFileFromElement(id){
+    const element = document.getElementById(id);
+    const selectedFile = element.files[0]; // Get the first selected file
+    return selectedFile;
+}
+
+
+// Extract the name of the uploaded file
+function extractFileName(file){
+    const fileName = file.name;
+    return fileName;
 }
 
 
 // Extract the content of the uploaded file
-function readFileContent(file) {
+// Not working
+function extractFileContent(file) {
+    const reader = new FileReader();
 
+    reader.onload = function(event) {
+        const fileContent = event.target.result;
+        console.log("File content:", fileContent);
+        console.log(typeof fileContent);
+        // You can now process the content (e.g., parse JSON, display text, etc.)
+    };
+
+    reader.onerror = function(event) {
+        console.error("Error reading file:", event.target.error);
+    };
+
+    reader.readAsText(file);
+
+    // const content = reader.result;
+    // return content;
+} 
+
+
+function convertTextToJSON(fileName, fileContent){
+    const obj = {file:fileName, code:fileContent};
+    const jsonString = JSON.stringify(obj);
+    return jsonString;
 }
 
 
-// Convert the content to JSON
-function convertFileContentToJSON(){
+// Send the JSON data to API (to be then sent to OpenAI)
+async function sendJsonToAPI(jsonString){
+    try{
+        const url = BASE_URL + "client/review.php";
+        const response = await axios.post(url,jsonString);
 
+        console.log(response);
+        return response;
+
+    } catch {
+        console.log("Error!");
+    }
 }
-
-
-// Send the JSON data to OpenAI
-async function sendJsonToAPI(value_name){
-
-}
-
-
-
-
-
-
-
-
