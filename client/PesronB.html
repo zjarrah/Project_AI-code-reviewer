@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>AI-Assisted Code Review – Person B (Critic)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+        margin: 24px;
+      }
+      h1 {
+        margin: 0 0 8px;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 16px 0;
+      }
+      label {
+        display: block;
+        margin: 8px 0 4px;
+        font-weight: 600;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      button {
+        padding: 10px 16px;
+        border: 0;
+        background: #222;
+        color: #fff;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #000;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+      }
+      th,
+      td {
+        border: 1px solid #eee;
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+      .pass {
+        color: #0a7f2e;
+        font-weight: 700;
+      }
+      .fail {
+        color: #b00020;
+        font-weight: 700;
+      }
+      pre {
+        background: #f7f7f7;
+        padding: 10px;
+        border-radius: 8px;
+        overflow: auto;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
+          "Liberation Mono", monospace;
+      }
+      small.muted {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      AI-Assisted Code Review — <span class="mono">Person B</span> (Critic)
+    </h1>
+    <p class="card" style="margin-top: 8px">
+      This page defines the review schema/guardrails and runs tests against
+      Person A’s PHP endpoint.
+      <br /><small class="muted"
+        >Contract: POST <code>/review.php</code> with JSON: { code, filename?,
+        language? } → JSON <em>array</em> of review items.</small
+      >
+    </p>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label for="apiUrl">Review API URL</label>
+          <input id="apiUrl" type="text" value="http://localhost/review.php" />
+        </div>
+        <div>
+          <label for="schema">Schema</label>
+          <select id="schema">
+            <option value="minimal" selected>
+              minimal (required fields only)
+            </option>
+            <option value="extended">
+              extended (allows line, rule_id, category)
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 12px">
+        <div>
+          <label for="strict">Strict schema mode</label>
+          <select id="strict">
+            <option value="true" selected>true</option>
+            <option value="false">false</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: end; justify-content: flex-end">
+          <button id="runBtn">Run Tests</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top: 0">Test Results</h3>
+      <table id="results">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Test</th>
+            <th>Status</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top: 0">Sample Python Snippet (no input validation)</h3>
+      <pre><code id="sampleCode" class="mono"></code></pre>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top: 0">AI vs Human Comparison (demo tool)</h3>
+      <p>Not part of the API; helps compare predictable, structured outputs.</p>
+      <button id="compareBtn">Show Demo Comparison</button>
+      <pre id="compareOut" class="mono" style="display: none"></pre>
+    </div>
+    <script src="Scripts/validation.js"></script>
+  </body>
+</html>
