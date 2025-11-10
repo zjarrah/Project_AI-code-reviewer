@@ -8,21 +8,19 @@
 
     <body>
 
-        <h1>Code Review Input</h1><br>
+        <h1>AI-generated Code Reviewer</h1><br>
 
-        <!-- Attache input file -->
-        <form action="/upload-target" method="post" enctype="multipart/form-data">
-            <label for="myFile">Choose a file:</label>
-            <input type="file" id="myFile" name="uploadedFile" accept=".py"><br>
-            <button type="submit" class="button" onclick='processFile()'>Submit</button>
-        </form>
+        <!-- Attach input file -->
+        <label for="myFile">Choose a file:</label>
+        <input type="file" id="myFile" name="uploadedFile" accept=".py"><br>
+        <button type="submit" class="button" onclick='processFile("myFile")'>Submit</button>
 
         <!-- Display inputted code -->
-        <h2><label for="inputted-code">Code (Inputted):</label></h2>
+        <h2><label for="inputted-code">Code:</label></h2>
         <textarea id="inputted-code" rows="4" cols="100" disabled></textarea>
 
         <!-- Display inputted human review -->
-        <h2><label for="inputted-human-review">Human Review (Inputted):</label></h2>
+        <h2><label for="inputted-human-review">Human Review:</label></h2>
         <textarea id="inputted-human-review" rows="7" cols="100"></textarea>
         
         <!-- Display AI review -->
