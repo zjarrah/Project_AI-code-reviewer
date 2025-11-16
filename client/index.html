@@ -11,9 +11,23 @@
         <h1>AI-generated Code Reviewer</h1><br>
 
         <!-- Attach input file -->
-        <label for="myFile">Choose a file:</label>
-        <input type="file" id="myFile" name="uploadedFile" accept=".py"><br>
-        <button type="submit" class="button" onclick='processFile("myFile")'>Submit</button>
+        <label for="fileInput">Choose a file:</label>
+        <input type="file" id="fileInput" name="uploadedFile" accept=".py"><br>
+
+        <!-- Select schema (minimal vs extended) -->
+        <label for="myDropdown">Choose schema:</label>
+        <select id="myDropdown" size="2" required>
+            <option value="minimal">Minimal</option>
+            <option value="extended">Extended</option>
+        </select><br>
+
+        <!-- Toggle strict schema mode -->
+        <label class="switch"> Strict schema mode
+            <input type="checkbox" id="strict-schema-toggle" value="on" checked>
+            <span class="slider round"></span>
+        </label><br><br>
+
+        <button type="submit" id="submitBtn" class="button">Submit</button>
 
         <!-- Display inputted code -->
         <h2><label for="inputted-code">Code:</label></h2>
@@ -34,7 +48,6 @@
 
         <script src="Scripts/axios.min.js"></script>
         <script src="Scripts/scripts.js"></script>
-        <script>insertReviewsHtmlTable("db_table")</script>
     </body>
 </html>
 

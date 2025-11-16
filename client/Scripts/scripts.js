@@ -1,7 +1,9 @@
-const BASE_URL = "http://localhost/Project_AI-Code-Reviewer/server/APIs/";
+const BASE_URL = "http://localhost/Project_AI-code-reviewer/server/APIs/";
 
 
 /////////////////////////////////////////////// For inserting db table into html element  ///////////////////////////////////////////////
+
+insertReviewsHtmlTable("db_table")
 
 async function insertReviewsHtmlTable(id){
     const arrayReviews = await getReviewsArray();
@@ -16,7 +18,6 @@ async function getReviewsArray(){
         const url = BASE_URL + "client/get_reviews.php";
         const response = await axios.get(url);
 
-        console.log(response);
         const dataArray = response.data.data;
         return dataArray
 
@@ -72,79 +73,66 @@ function insertHtmlIntoElement(html, id){
 
 /////////////////////////////////////////////// For processing the submitted input file  ///////////////////////////////////////////////
 
-document.getElementById('myFile').addEventListener('change', function(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    fileContent = e.target.result;
-  };
-
-  reader.onerror = function(e) {
-    console.error("Error reading file:", e);
-  };
-
-  reader.readAsText(file); // Reads the file as plain text
-});
-
-
-function processFile(id, fileContent){
+document.getElementById("submitBtn").addEventListener("click", async function() {
     // All the processing steps combined
-    console.log(fileContent);
-    try{
-        const file = grabFileFromElement(id);
-        const fileName = extractFileName(file);
-        console.log(fileContent)
-        // const jsonString = convertTextToJSON(fileName, fileContent);
-        // console.log(jsonString)
-        // sendJsonToAPI(jsonString);
-    }catch{
-        console.log("oops, error!")
+
+    // Grab selected schema (minimal vs extended)
+    const schema = document.getElementById("myDropdown").value;
+    if (!schema) {
+        alert("Please select a schema first.");
+        return;
     }
-}
 
-// Grab the uploaded file
-function grabFileFromElement(id){
-    const element = document.getElementById(id);
-    const selectedFile = element.files[0]; // Get the first selected file
-    return selectedFile;
-}
+    // Grab if strict schema mode is selected (true or false)
+    const strictSchema = document.getElementById("strict-schema-toggle").checked;
 
+    // Grab the inputted Human Review text
+    const humanReview = document.getElementById("inputted-human-review").value;
+    if (!humanReview) {
+        alert("Please input human review first.");
+        return;
+    }
 
-// Extract the name of the uploaded file
-function extractFileName(file){
+    // Grab the uploaded file
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select a Python file first.");
+        return;
+    }
+
+    // Extract the name of the uploaded file
     const fileName = file.name;
-    return fileName;
-}
 
-
-// Extract the content of the uploaded file
-// Not working
-function extractFileContent(file) {
+    // Extract the content of the uploaded file
     const reader = new FileReader();
 
-    reader.onload = function(event) {
-        const fileContent = event.target.result;
-        console.log("File content:", fileContent);
-        console.log(typeof fileContent);
-        // You can now process the content (e.g., parse JSON, display text, etc.)
-    };
-
-    reader.onerror = function(event) {
-        console.error("Error reading file:", event.target.error);
+    reader.onerror = function() {
+    alert("Error reading file.");
     };
 
     reader.readAsText(file);
 
-    // const content = reader.result;
-    // return content;
-} 
+    reader.onload = async function(e) {
+        const fileContent = e.target.result;
+
+        // Display file content
+        document.getElementById("inputted-code").textContent = fileContent;
+
+        const jsonString = convertToJSON(fileName, fileContent, schema, strictSchema, humanReview);
+
+        const response = await sendJsonToAPI(jsonString);
+
+        // Display AI review
+        document.getElementById("ai-review").textContent = response.data.data;
+    };
+
+});
 
 
-function convertTextToJSON(fileName, fileContent){
-    const obj = {file:fileName, code:fileContent};
+function convertToJSON(fileName, fileCont, schema, strictSchema, humanReview){
+    const obj = {input:{file:fileName, code:fileCont}, schema:schema, strictSchema:strictSchema, humanReview:humanReview};
     const jsonString = JSON.stringify(obj);
     return jsonString;
 }

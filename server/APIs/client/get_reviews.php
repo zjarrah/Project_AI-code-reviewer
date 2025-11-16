@@ -7,7 +7,7 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include("../../Database/connection-db.php");
 
-$sql = "SELECT input_code, human_review, ai_review, ai_prompt FROM reviews";
+$sql = "SELECT * FROM reviews";
 
 $query = $mysql->prepare($sql);
 $query->execute();
