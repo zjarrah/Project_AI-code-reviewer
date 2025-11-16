@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AI Code Reviewer</title>
+        <link rel="stylesheet" href="Styles/style.css">
+
+    </head>
+
+    <body>
+
+        <h1>AI-generated Code Reviewer</h1><br>
+
+        <!-- Attach input file -->
+        <label for="fileInput">Choose a file:</label>
+        <input type="file" id="fileInput" name="uploadedFile" accept=".py"><br>
+
+        <!-- Select schema (minimal vs extended) -->
+        <label for="myDropdown">Choose schema:</label>
+        <select id="myDropdown" size="2" required>
+            <option value="minimal">Minimal</option>
+            <option value="extended">Extended</option>
+        </select><br>
+
+        <!-- Toggle strict schema mode -->
+        <label class="switch"> Strict schema mode
+            <input type="checkbox" id="strict-schema-toggle" value="on" checked>
+            <span class="slider round"></span>
+        </label><br><br>
+
+        <button type="submit" id="submitBtn" class="button">Submit</button>
+
+        <!-- Display inputted code -->
+        <h2><label for="inputted-code">Code:</label></h2>
+        <textarea id="inputted-code" rows="4" cols="100" disabled></textarea>
+
+        <!-- Display inputted human review -->
+        <h2><label for="inputted-human-review">Human Review:</label></h2>
+        <textarea id="inputted-human-review" rows="7" cols="100"></textarea>
+        
+        <!-- Display AI review -->
+        <h2><label for="ai-review">AI Review:</label></h2>
+        <textarea id="ai-review" rows="7" cols="100" disabled></textarea>
+
+        <!-- Display db table -->
+        <br><br><br>
+        <h2><label for="db_table">Previous Submissions</label></h2>
+        <div id="db_table"></div>
+
+        <script src="Scripts/axios.min.js"></script>
+        <script src="Scripts/scripts.js"></script>
+    </body>
+</html>
+
